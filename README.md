@@ -20,15 +20,13 @@ BlogEdge is a dynamic and responsive full-stack blogging web application where a
 🧠 Personalized Dashboard: Authenticated users can see blogs and history tied to their account.
 
 🛠️ Tech Stack
-
-Technology	Purpose
-Node.js -> Backend runtime
-Express.js ->	Web framework
-EJS  -> 	Server-side templating
-MongoDB ->  (with Mongoose)	Database for users, blogs, and comments
-Multer -> Handling image uploads
-JWT ->	Secure token-based authentication
-Bootstrap -> 	Responsive UI with dark/light mode support
+Node.js,
+Express.js ,
+EJS  ,
+MongoDB ,
+Multer ,
+JWT ,
+Bootstrap 
 
 
 👨‍💻 For Developers
