@@ -1,66 +1,57 @@
-const express =require('express');
+const express = require('express');
 const router = express.Router();
-const multer = require("multer");
-const path = require("path");
+const multer = require('multer');
+const { storage } = require('../utils/cloudinary'); // cloudinary storage
+const upload = multer({ storage }); // use cloudinary storage
 
 const Blog = require("../models/blog");
 const Comment = require("../models/comment");
 
-// Configure multer storage to handle file uploads:
-// - 'destination' sets the folder where uploaded files will be saved (./public/uploads/)
-// - 'filename' generates a unique filename using the current timestamp and the original file name 
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, path.resolve('./public/uploads/'))
-  },
-  filename: function (req, file, cb) {
-    const fileName = `${Date.now()}-${file.originalname}`;
-    cb(null, fileName);
-  }
+// Route to render blog creation form
+router.get("/add-new", (req, res) => {
+  return res.render("addBlog", {
+    user: req.user,
+  });
 });
 
-// Create a multer instance using the defined storage settings.
-// This 'upload' middleware will handle file uploads in routes.
+// Route to show a blog and its comments
+router.get("/:id", async (req, res) => {
+  const blog = await Blog.findById(req.params.id).populate("createdBy");
+  const comments = await Comment.find({ blogId: req.params.id }).populate("createdBy");
 
-const upload = multer({ storage: storage });
-
-router.get("/add-new", (req,res) => {
-    return res.render("addBlog",{
-        user: req.user,
-    });
-});
-router.get("/:id", async(req,res) => {
-   
-    const blog = await Blog.findById(req.params.id).populate("createdBy");
-    const comments = await Comment.find({blogId: req.params.id}).populate("createdBy");
-    return res.render("blog",{
-        user: req.user,
-        blog,
-        comments,
-    });
+  return res.render("blog", {
+    user: req.user,
+    blog,
+    comments,
+  });
 });
 
-router.post("/", upload.single("coverImage"), async (req,res) => {
-   const {title, body} = req.body;
-   const blog = await Blog.create({
+// Route to handle blog submission with cloudinary image upload
+router.post("/", upload.single("coverImage"), async (req, res) => {
+  const { title, body } = req.body;
+
+  const blog = await Blog.create({
     title,
     body,
     createdBy: req.user._id,
-    coverImageURL:`/uploads/${req.file.filename}`,
-   })
-    return res.redirect(`/blog/${blog._id}`);
+    coverImageURL: req.file.path, // Cloudinary gives a URL
+  });
+
+  return res.redirect(`/blog/${blog._id}`);
 });
 
-router.post("/comment/:id",async(req,res) => {
-    const {content} = req.body;
-    const blogId = req.params.id;
-await Comment.create({
+// Route to handle comment submission
+router.post("/comment/:id", async (req, res) => {
+  const { content } = req.body;
+  const blogId = req.params.id;
+
+  await Comment.create({
     content,
     blogId,
     createdBy: req.user._id,
+  });
+
+  return res.redirect(`/blog/${blogId}`);
 });
-return res.redirect(`/blog/${blogId}`);
-})
 
 module.exports = router;
