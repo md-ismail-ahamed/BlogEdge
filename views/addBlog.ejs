@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+  <%- include('./partials/head') %>
+  <title>Blog Page</title>
+
+  <!-- Optional: Scoped styles for theming -->
+  <style>
+    /* Light Theme */
+    [data-bs-theme="light"] .form-card {
+      background-color: #ffffff;
+      color: #212529;
+    }
+
+    /* Dark Theme */
+    [data-bs-theme="dark"] .form-card {
+      background-color: #1e1e1e;
+      color: #f8f9fa;
+    }
+
+    .form-card {
+      border-radius: 1rem;
+      padding: 2rem;
+      box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+
+<body class="bg-body text-body">
+  <%- include('./partials/nav') %>
+  <%- include('./partials/themeToggle') %>
+
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6">
+        <div class="form-card">
+          <form action="/blog" method="post" enctype="multipart/form-data">
+            <h2 class="text-center mb-4">Create New Blog</h2>
+
+            <div class="mb-3">
+              <label for="coverImage" class="form-label">Cover Image</label>
+              <input type="file" class="form-control" id="coverImage" name="coverImage">
+            </div>
+
+            <div class="mb-3">
+              <label for="title" class="form-label">Title</label>
+              <input type="text" class="form-control" id="title" name="title">
+            </div>
+
+            <div class="mb-3">
+              <label for="content" class="form-label">Body</label>
+              <textarea class="form-control" id="content" name="body" rows="5"></textarea>
+            </div>
+
+            <div class="d-grid">
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <%- include('./partials/script') %>
+  <script src="/js/themeToggle.js"></script>
+</body>
+</html>

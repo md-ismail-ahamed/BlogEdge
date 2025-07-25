@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <%- include('./partials/head') %>
+    <title>Blog Page</title>
+
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
+    <!-- Optional: theme-based CSS -->
+    <style>
+      [data-bs-theme="light"] .blog-body,
+      [data-bs-theme="light"] .author-card,
+      [data-bs-theme="light"] .comment-box {
+        background-color: #f8f9fa;
+        color: #212529;
+      }
+
+      [data-bs-theme="dark"] .blog-body,
+      [data-bs-theme="dark"] .author-card,
+      [data-bs-theme="dark"] .comment-box {
+        background-color: #1e1e1e;
+        color: #f8f9fa;
+      }
+
+      .blog-body, .author-card, .comment-box {
+        border-radius: 1rem;
+      }
+    </style>
+</head>
+
+<body class="bg-body text-body">
+    <%- include('./partials/nav') %>
+
+    <div class="container my-5">
+        <!-- Title -->
+        <h1 class="text-center fw-bold display-5 mb-4 animate__animated animate__fadeInUp"><%= blog.title %></h1>
+
+        <!-- Cover Image -->
+        <div class="text-center mb-5">
+            <img src="<%= blog.coverImageURL %>" class="img-fluid rounded shadow" style="max-height: 400px; object-fit: cover;" alt="Blog Cover">
+        </div>
+
+        <!-- Blog Body -->
+        <div class="blog-body p-4 shadow-sm mb-5">
+            <pre class="fs-5" style="white-space: pre-wrap;"><%= blog.body %></pre>
+        </div>
+
+        <!-- Author -->
+        <div class="d-flex align-items-center gap-3 p-3 author-card shadow-sm mb-5">
+            <img src="<%= blog.createdBy.profileImageURL %>" class="rounded-circle shadow" style="width: 60px; height: 60px; object-fit: cover;" alt="Author">
+            <h5 class="m-0 fw-semibold"><%= blog.createdBy.fullName %></h5>
+        </div>
+
+        <!-- Comment Form -->
+        <div class="mb-5">
+            <h3 class="mb-3">Comments - <%= comments.length %></h3>
+            <form action="/blog/comment/<%= blog._id %>" method="post">
+                <div class="mb-3">
+                    <input type="text" name="content" class="form-control border-secondary" placeholder="Write a comment..." required>
+                </div>
+                <button type="submit" class="btn btn-primary">Add Comment</button>
+            </form>
+        </div>
+
+        <!-- Comment List -->
+        <% comments.forEach(comment => { %>
+            <div class="p-3 mb-3 comment-box shadow-sm">
+                <div class="d-flex align-items-center gap-3 mb-2">
+                    <img src="<%= comment.createdBy.profileImageURL %>" class="rounded-circle shadow" style="width: 50px; height: 50px; object-fit: cover;" alt="User">
+                    <strong><%= comment.createdBy.fullName %></strong>
+                </div>
+                <pre style="white-space: pre-wrap;"><%= comment.content %></pre>
+                <hr>
+            </div>
+        <% }) %>
+    </div>
+
+    <%- include('./partials/script') %>
+    <script src="/js/themeToggle.js"></script>
+</body>
+</html>
+ad>
